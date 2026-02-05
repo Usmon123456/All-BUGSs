@@ -1,210 +1,340 @@
+import { Bug, Severity } from "./types";
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { BUGS } from './constants';
-import BugCard from './components/BugCard';
-import { ChevronLeft, ChevronRight, Bug as BugIcon, LayoutGrid, Info } from 'lucide-react';
-
-const App: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<number>(0);
-
-  const paginate = useCallback((newDirection: number) => {
-    setDirection(newDirection);
-    setCurrentIndex((prevIndex) => {
-      let nextIndex = prevIndex + newDirection;
-      if (nextIndex < 0) nextIndex = BUGS.length - 1;
-      if (nextIndex >= BUGS.length) nextIndex = 0;
-      return nextIndex;
-    });
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') paginate(1);
-      if (e.key === 'ArrowLeft') paginate(-1);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [paginate]);
-
-  const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 800 : -800,
-      opacity: 0,
-      scale: 0.8,
-      rotateY: direction > 0 ? 45 : -45,
-      z: -200
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      rotateY: 0,
-      z: 0
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 800 : -800,
-      opacity: 0,
-      scale: 0.8,
-      rotateY: direction < 0 ? 45 : -45,
-      z: -200
-    })
-  };
-
-  return (
-    <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden selection:bg-indigo-100">
-      {/* Background Decorative Blobs */}
-      <div className="fixed top-[-10%] left-[-5%] w-[60%] h-[60%] bg-indigo-200/30 blur-[120px] -z-10 rounded-full animate-blob" />
-      <div className="fixed bottom-[-10%] right-[-5%] w-[60%] h-[60%] bg-blue-200/30 blur-[120px] -z-10 rounded-full animate-blob animation-delay-2000" />
-      <div className="fixed top-[40%] right-[10%] w-[30%] h-[30%] bg-rose-100/20 blur-[100px] -z-10 rounded-full animate-blob animation-delay-4000" />
-
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 p-8 flex items-center justify-between pointer-events-none">
-
-        
-        <div className="hidden sm:flex items-center gap-4 pointer-events-auto">
-          <motion.div 
-            layout
-            className="bg-white/70 backdrop-blur-2xl px-5 py-2.5 rounded-2xl border border-white shadow-lg shadow-slate-200/50 flex items-center gap-3"
-          >
-            <LayoutGrid className="w-4 h-4 text-indigo-500" />
-            <span className="text-sm font-black text-slate-900 tabular-nums">
-              {String(currentIndex + 1).padStart(2, '0')} <span className="text-slate-300 font-medium">/</span> {String(BUGS.length).padStart(2, '0')}
-            </span>
-          </motion.div>
-        </div>
-      </header>
-
-      {/* Info Badge */}
-      <div className="fixed top-24 left-1/2 -translate-x-1/2 z-40">
-         <motion.div 
-           initial={{ y: -20, opacity: 0 }}
-           animate={{ y: 0, opacity: 1 }}
-           className="bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-slate-100 flex items-center gap-2 shadow-sm"
-         >
-           <Info className="w-3.5 h-3.5 text-indigo-500" />
-           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">All bugs here</span>
-         </motion.div>
-      </div>
-
-      {/* Carousel Section */}
-      <main className="relative w-full max-w-5xl flex items-center justify-center gap-4 sm:gap-12 mt-16 px-4 [perspective:1200px]">
-        {/* Nav Left */}
-        <motion.button
-          whileHover={{ scale: 1.1, x: -8 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => paginate(-1)}
-          className="group hidden lg:flex shrink-0 w-16 h-16 items-center justify-center bg-white rounded-[24px] shadow-2xl shadow-slate-200/50 border border-slate-100 hover:bg-slate-950 hover:text-white transition-colors duration-300 z-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          aria-label="Previous bug"
-        >
-          <ChevronLeft className="w-8 h-8" />
-        </motion.button>
-
-        {/* Card Content Area */}
-        <div className="relative flex-1 w-full flex items-center justify-center min-h-[620px] overflow-visible">
-          <AnimatePresence initial={false} custom={direction} mode="popLayout">
-            <motion.div
-              key={currentIndex}
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{
-                x: { type: "spring", stiffness: 260, damping: 26 },
-                opacity: { duration: 0.25 },
-                scale: { type: "spring", stiffness: 200, damping: 25 },
-                rotateY: { duration: 0.4 }
-              }}
-              className="absolute w-full"
-            >
-              <BugCard bug={BUGS[currentIndex]} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Nav Right */}
-        <motion.button
-          whileHover={{ scale: 1.1, x: 8 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => paginate(1)}
-          className="group hidden lg:flex shrink-0 w-16 h-16 items-center justify-center bg-white rounded-[24px] shadow-2xl shadow-slate-200/50 border border-slate-100 hover:bg-slate-950 hover:text-white transition-colors duration-300 z-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          aria-label="Next bug"
-        >
-          <ChevronRight className="w-8 h-8" />
-        </motion.button>
-      </main>
-
-      {/* Mobile Interaction Bar */}
-      <div className="flex lg:hidden items-center gap-8 mt-12 z-50 relative">
-        <motion.button
-          whileTap={{ scale: 0.8 }}
-          onClick={() => paginate(-1)}
-          className="w-14 h-14 flex items-center justify-center bg-white rounded-2xl shadow-xl text-slate-900 active:bg-slate-100 border border-slate-100"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </motion.button>
-        <div className="flex flex-col items-center">
-          <motion.span 
-            key={currentIndex}
-            initial={{ y: 5, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-xl font-black text-slate-900 tabular-nums"
-          >
-            {currentIndex + 1}
-          </motion.span>
-          <motion.div 
-            layoutId="mobile-indicator"
-            className="h-1.5 w-8 bg-indigo-500 rounded-full mt-1" 
-          />
-        </div>
-        <motion.button
-          whileTap={{ scale: 0.8 }}
-          onClick={() => paginate(1)}
-          className="w-14 h-14 flex items-center justify-center bg-white rounded-2xl shadow-xl text-slate-900 active:bg-slate-100 border border-slate-100"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </motion.button>
-      </div>
-
-      {/* Enhanced Progress Navigation */}
-      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-end gap-2 px-8 py-5 bg-white/60 backdrop-blur-2xl rounded-[32px] border border-white/50 shadow-2xl shadow-slate-200/50 z-50 max-w-[90vw] overflow-x-auto hide-scrollbar">
-        {BUGS.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => {
-              setDirection(idx > currentIndex ? 1 : -1);
-              setCurrentIndex(idx);
-            }}
-            className="group relative flex flex-col items-center p-1"
-          >
-            <motion.div
-              animate={{
-                height: idx === currentIndex ? 24 : 8,
-                width: idx === currentIndex ? 12 : 8,
-                backgroundColor: idx === currentIndex ? '#0f172a' : '#cbd5e1'
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="rounded-full transition-colors duration-300 group-hover:bg-slate-400"
-            />
-            {idx === currentIndex && (
-               <motion.div 
-                 layoutId="active-dot-label"
-                 initial={{ opacity: 0, y: 10 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 className="absolute -top-6 text-[10px] font-black text-slate-900"
-               >
-                 {String(idx + 1).padStart(2, '0')}
-               </motion.div>
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default App;
+export const BUGS: Bug[] = [
+  {
+    id: "1",
+    title: "A logout button is needed.",
+    description: "After logging in, users should have a button to log out.",
+    severity: Severity.CRITICAL,
+    mediaUrl: "/items/vidio1.mp4",
+    mediaType: "video",
+    dateReported: "2024-05-10",
+  },
+  {
+    id: "2",
+    title: "Cart issue",
+    description: "Background should not scroll when clicking on the ‘Cart’.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio2.mp4",
+    mediaType: "video",
+    dateReported: "2024-05-12",
+  },
+  {
+    id: "3",
+    title: "Round button",
+    description:
+      "When the round button is clicked, should something happen? If nothing is supposed to happen, it shouldn’t navigate to the ‘Home’ page.",
+    severity: Severity.HIGH,
+    mediaUrl: "/items/vidio3.mp4",
+    mediaType: "video",
+    dateReported: "2024-05-15",
+  },
+  {
+    id: "4",
+    title: "Add a border",
+    description:
+      "A border should be added to the message input field — this would be a great usability improvement for users.",
+    severity: Severity.LOW,
+    mediaUrl: "/items/rasm2.png",
+    mediaType: "image",
+    dateReported: "2024-05-18",
+  },
+  {
+    id: "5",
+    title: "Phone number format",
+    description:
+      "Uzbek phone numbers should be written in the following format: +998 95 170 59 95, +998 93 322 56 89, +998 97 752 17 27",
+    severity: Severity.CRITICAL,
+    mediaUrl: "/items/rasm3.png",
+    mediaType: "image",
+    dateReported: "2024-05-20",
+  },
+  {
+    id: "6",
+    title: "Input text",
+    description:
+      "If this input is only used for searching courses, the placeholder can be something like: “Search our courses” or a similar variation.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm4.png",
+    mediaType: "image",
+    dateReported: "2024-05-22",
+  },
+  {
+    id: "7",
+    title: "Alignment issue",
+    description:
+      "Everything should be aligned evenly. The object marked with the red line is positioned lower than the others — all elements should be on the same level.",
+    severity: Severity.LOW,
+    mediaUrl: "/items/rasm1.png",
+    mediaType: "image",
+    dateReported: "2024-05-25",
+  },
+  {
+    id: "8",
+    title: "Problem with clearing filters",
+    description:
+      'Something was searched through the search input and something was selected from the filter. Then, when the Clear All Filters button is clicked, the words in the search input are also being cleared. If the search input also needs to be cleared, there should be a separate Clear All" button.',
+    severity: Severity.HIGH,
+    mediaUrl: "/items/vidio5.mp4",
+    mediaType: "video",
+    dateReported: "2024-05-28",
+  },
+  {
+    id: "9",
+    title: "Problem with Clear All Filters",
+    description:
+      "When entering a course from the Home page, clicking the (Clear All Filter) button does not clear all the filters.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio4.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-01",
+  },
+  {
+    id: "10",
+    title: "Problem with the search input",
+    description:
+      "When a word is typed in the search input, the “x” button and the search icon overlap each other.  ",
+    severity: Severity.LOW,
+    mediaUrl: "/items/rasm5.png",
+    mediaType: "image",
+    dateReported: "2024-06-03",
+  },
+  {
+    id: "11",
+    title: "Suggestion",
+    description:
+      "It would be more convenient for users if clicking on the image takes them to the course.",
+    severity: Severity.HIGH,
+    mediaUrl: "/items/rasm6.png",
+    mediaType: "image",
+    dateReported: "2024-06-05",
+  },
+  {
+    id: "12",
+    title: "Suggestion",
+    description:
+      "An icon should be placed on the left or right for better user convenience.",
+    severity: Severity.LOW,
+    mediaUrl: "/items/rasm7.png",
+    mediaType: "image",
+    dateReported: "2024-06-07",
+  },
+  {
+    id: "13",
+    title: "Problem with the search button",
+    description:
+      "When the search button is clicked, the background should stay in one place.",
+    severity: Severity.CRITICAL,
+    mediaUrl: "/items/vidio6.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-10",
+  },
+  {
+    id: "14",
+    title: 'Problem with "Article Review"',
+    description:
+      'When I click the "Article Review" button in the Home section, it says "You are already logged in." But when I click the "Article Review" button in the About section, it takes me to a specific page.',
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio7.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-12",
+  },
+  {
+    id: "15",
+    title: "Suggestion",
+    description:
+      'When navigating to the YouTube page, opening it with target="_blank" would make it much more convenient for the user.',
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio8.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-15",
+  },
+  {
+    id: "16",
+    title: "Bug after searching",
+    description:
+      "A course is found through the search, but when the search button is clicked again, all courses are displayed.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio9.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-18",
+  },
+  {
+    id: "17",
+    title: "Unclear behavior",
+    description:
+      "When the actions in the video are done quickly and the Clear All Filters button is clicked, it navigates to an unknown page.",
+    severity: Severity.HIGH,
+    mediaUrl: "/items/vidio10.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-20",
+  },
+  {
+    id: "18",
+    title: "Problem with displaying courses",
+    description:
+      "There are 3 courses, but 2 identical courses are shown at the bottom.",
+    severity: Severity.LOW,
+    mediaUrl: "/items/vidio11.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-22",
+  },
+  {
+    id: "19",
+    title: "Image inconsistency",
+    description:
+      "The images here are different. Logically, they should be the same.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/birxil.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "20",
+    title: "Extra characters...",
+    description:
+      "I tried to edit a review, wrote Im funny and after saving, meaningless characters were added.",
+    severity: Severity.LOW,
+    mediaUrl: "/items/vidio12.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-28",
+  },
+  {
+    id: "21",
+    title: "Problems in the Learning section",
+    description:
+      'There are several minor issues only in the Learning section. When entering the Learning section, the navbar should indicate it is active by changing color. Also, in the navbar, the "Enroll Now" button has been replaced by a user icon. Cart icon not',
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio14.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "22",
+    title: "Problem with rating",
+    description:
+      "It says that 2 ratings have been given in other places, but in the Home section, this is not the case.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm9.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "23",
+    title: "Suggestion",
+    description:
+      "The account avatar should be enlarged and placed side by side with the user information.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm10.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "24",
+    title: "Image inconsistency",
+    description:
+      "The images here are different. Logically, they should be the same.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio15.mp4",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "25",
+    title: "Problem with the modal",
+    description:
+      "When the (Share This Course) button is clicked, the modal stays behind the courses.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio15.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "26",
+    title: "Problem with Completed Courses",
+    description:
+      "There is 1 course in Completed Courses, but at the bottom it shows 12/4, 33% complete. I marked this course as completed using the button, which is why it appears in Completed Courses.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm11.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "27",
+    title: "Phone Number",
+    description:
+      "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm12.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "28",
+    title: "Settings not working",
+    description: "",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio16.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "29",
+    title: "Raiting Star and email havent",
+    description: "",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm12.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "30",
+    title: "Email input",
+    description:
+      "In the footer, the email can be submitted even if nothing is entered. Instead, email validation should be implemented and submitting without entering anything should be prevented.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/vidio17.mp4",
+    mediaType: "video",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "27",
+    title: "Phone Number",
+    description:
+      "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm12.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "27",
+    title: "Phone Number",
+    description:
+      "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm12.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "27",
+    title: "Phone Number",
+    description:
+      "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm12.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+  {
+    id: "27",
+    title: "Phone Number",
+    description:
+      "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
+    severity: Severity.MEDIUM,
+    mediaUrl: "/items/rasm12.png",
+    mediaType: "image",
+    dateReported: "2024-06-25",
+  },
+];
