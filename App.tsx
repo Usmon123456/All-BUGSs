@@ -63,19 +63,7 @@ const App: React.FC = () => {
 
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 p-8 flex items-center justify-between pointer-events-none">
-        <div className="flex items-center gap-4 pointer-events-auto group cursor-default">
-          <motion.div 
-            whileHover={{ rotate: 180, scale: 1.1 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-slate-900/20"
-          >
-            <BugIcon className="w-6 h-6" />
-          </motion.div>
-          <div>
-            <h1 className="text-xl font-black text-slate-900 leading-none tracking-tight">BugTrack</h1>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.3em] mt-1.5 opacity-60">Insight Gallery</p>
-          </div>
-        </div>
+
         
         <div className="hidden sm:flex items-center gap-4 pointer-events-auto">
           <motion.div 
@@ -98,7 +86,7 @@ const App: React.FC = () => {
            className="bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-slate-100 flex items-center gap-2 shadow-sm"
          >
            <Info className="w-3.5 h-3.5 text-indigo-500" />
-           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Use arrows to browse bugs</span>
+           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">All bugs here</span>
          </motion.div>
       </div>
 
