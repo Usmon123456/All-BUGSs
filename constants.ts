@@ -73,7 +73,7 @@ export const BUGS: Bug[] = [
     id: "8",
     title: "Problem with clearing filters",
     description:
-      'Something was searched through the search input and something was selected from the filter. Then, when the Clear All Filters button is clicked, the words in the search input are also being cleared. If the search input also needs to be cleared, there should be a separate Clear All" button.',
+      'Something was searched through the search input and something was selected from the filter. Then, when the Clear All Filters button is clicked, the words in the search input are also being cleared. If the search input also needs to be cleared, there should be a separate Clear All button.',
     severity: Severity.HIGH,
     mediaUrl: "/items/vidio5.mp4",
     mediaType: "video",
@@ -236,7 +236,7 @@ export const BUGS: Bug[] = [
       "The images here are different. Logically, they should be the same.",
     severity: Severity.MEDIUM,
     mediaUrl: "/items/vidio15.mp4",
-    mediaType: "image",
+    mediaType: "video",
     dateReported: "2024-06-25",
   },
   {
@@ -269,27 +269,25 @@ export const BUGS: Bug[] = [
     mediaType: "image",
     dateReported: "2024-06-25",
   },
-    {
+  {
     id: "28",
     title: "Settings not working",
-    description:
-      "",
+    description: "",
     severity: Severity.MEDIUM,
     mediaUrl: "/items/vidio16.mp4",
     mediaType: "video",
     dateReported: "2024-06-25",
   },
-    {
+  {
     id: "29",
     title: "Raiting Star and email havent",
-    description:
-      "",
+    description: "",
     severity: Severity.MEDIUM,
     mediaUrl: "/items/rasm12.png",
     mediaType: "image",
     dateReported: "2024-06-25",
   },
-    {
+  {
     id: "30",
     title: "Email input",
     description:
@@ -299,46 +297,44 @@ export const BUGS: Bug[] = [
     mediaType: "video",
     dateReported: "2024-06-25",
   },
-    {
-    id: "27",
-    title: "Phone Number",
-    description:
-      "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
-    severity: Severity.MEDIUM,
-    mediaUrl: "/items/rasm12.png",
-    mediaType: "image",
-    dateReported: "2024-06-25",
-  },
-    {
-    id: "27",
-    title: "Phone Number",
-    description:
-      "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
-    severity: Severity.MEDIUM,
-    mediaUrl: "/items/rasm12.png",
-    mediaType: "image",
-    dateReported: "2024-06-25",
-  },
-    {
-    id: "27",
-    title: "Phone Number",
-    description:
-      "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
-    severity: Severity.MEDIUM,
-    mediaUrl: "/items/rasm12.png",
-    mediaType: "image",
-    dateReported: "2024-06-25",
-  },
-    {
-    id: "27",
-    title: "Phone Number",
-    description:
-      "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
-    severity: Severity.MEDIUM,
-    mediaUrl: "/items/rasm12.png",
-    mediaType: "image",
-    dateReported: "2024-06-25",
-  },
-
-  
+  // {
+  //   id: "27",
+  //   title: "Phone Number",
+  //   description:
+  //     "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
+  //   severity: Severity.MEDIUM,
+  //   mediaUrl: "/items/rasm12.png",
+  //   mediaType: "image",
+  //   dateReported: "2024-06-25",
+  // },
+  // {
+  //   id: "27",
+  //   title: "Phone Number",
+  //   description:
+  //     "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
+  //   severity: Severity.MEDIUM,
+  //   mediaUrl: "/items/rasm12.png",
+  //   mediaType: "image",
+  //   dateReported: "2024-06-25",
+  // },
+  // {
+  //   id: "27",
+  //   title: "Phone Number",
+  //   description:
+  //     "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
+  //   severity: Severity.MEDIUM,
+  //   mediaUrl: "/items/rasm12.png",
+  //   mediaType: "image",
+  //   dateReported: "2024-06-25",
+  // },
+  // {
+  //   id: "27",
+  //   title: "Phone Number",
+  //   description:
+  //     "The phone number field should be restricted, meaning a maximum of 15 digits can be entered and letters should not be allowed.",
+  //   severity: Severity.MEDIUM,
+  //   mediaUrl: "/items/rasm12.png",
+  //   mediaType: "image",
+  //   dateReported: "2024-06-25",
+  // },
 ];
